@@ -5,6 +5,35 @@
 /// Read More at:
 /// http://my-classes.com/2014/04/26/combining-zeromq-and-nanomsg-for-serving-web-requests/
 ///
+///
+///
+/// 
+/// Combining ZeroMQ and NanoMsg for Serving Web-requests
+/// 
+/// Web-requests typically follow a request-reply pattern. However, ZeroMQ has severe restrictions on using REQ-REP patterns in an asynchronous way.
+/// 
+/// NanoMsg attempts to solve this strictness of REQ-REP by fusing them with reconnect capabilities and load-balancing features. While this is good, 
+/// and in some sense try to mimic the behaviour of DEALER-ROUTER combination of ZMQ, they are not compatible with raw BSD sockets to be able to 
+/// let web-browsers talk to them directly.
+///
+/// ZeroMQ on the other-hand offers RAW ROUTER capabilities that lets browsers talk to them natively in HTTP.
+/// 
+/// And you can take advantage of both of these message frameworks to get the advantage of raw http compatibility (with raw ROUTER socket of ZMQ 
+/// on the front) and unrestricted request-response patter on NanoMsg in the backend.
+/// 
+/// Here is the basic version of fusing the ZMQ raw ROUTER (frontend) socket and NanoMsg REQ-REP (backend) sockets.
+/// 
+/// 
+/// A pretty simple example, that always replies ‘Hello World!!’ to the browser. The raw ROUTER socket is listening on tcp port 8080, so any browser 
+/// that sends a request on port 8080 of localhost, will get back the response. The internal NanoMsg communication is happening on inproc channel. 
+/// A dedicated thread is created for the NanoMsg worker socket (REP) that serves the responses. You can experiment with creating multiple nanoMsg 
+/// worker threads and stress testing. it.
+/// 
+/// If interested in learning more designing distributed architectures using advanced network and message frameworks, you may find our 
+/// Live-classes useful. Please write to us to enquire about the upcoming live-class sessions. http://my-classes.com/contact/
+/// 
+/// 
+///
 ///////////////////////////////////////////////////////
 #include "czmq.h"
 #include "nn.h"
