@@ -1,0 +1,48 @@
+UDP (User Datagram Protocol) is a connectionless, unreliable transport protocol. It belongs to the Transport Layer of the OSI model. Each single UDP packet is called a UDP datagram. UDP datagrams are embedded in an IP datagram and sent across a network.
+
+Connectionless:
+
+UDP is a connectionless protocol. That means, all UDP datagrams are independent datagrams. No two UDP datagrams have a relationship. The datagrams are not sequenced or numbered in any way.
+
+Unreliable:
+
+UDP is also unreliable. That means, if a UDP packet gets lost or has an error, there is no way to handle it. The only error-control mechanism in place for UDP is checksum. Other than that, there is no other error-control mechanism like a TCP handshake in place. So if a packet is duplicated or gets lost, there is no way to know.
+
+So, what’s the point of knowing about UDP if it’s so unreliable? The connectionless and unreliable characteristics give UDP datagrams the advantage of being smaller in size than when compared to TCP packets, enabling it to be very useful when transmitting small amounts of data that do not need the robustness of TCP.
+
+Queuing:
+
+UDP makes use of Queues. What are queues? Queues are data structures in which data is processed in first-in-first-out (FIFO) order, just like any other regular queue that you may encounter in day-to-day life :)
+
+Client side (Sending):
+========================
+When a process that wants to use UDP starts up, it requests the Operating System (OS) for a port number. In most cases, the OS assigns an ephemeral port number to the process. The process uses this port for all it’s communication, whether it’s with a single other process on the network or multiple processes. Along with a port number, one incoming queue and one outgoing queue is usually assigned to the process.
+
+The process can now send messages by queuing them in the outgoing queue by using the source port number in the request.
+
+UDP removes the packet, attaches the UDP header, embeds the UDP datagram into an IP datagram which gets sent off.
+
+In case of overflow of the queue (the queue being full), the OS asks the process to wait before sending more messages.
+
+Client-side (Receiving):
+========================
+When a message arrives for a client, UDP checks to see if there’s an incoming queue created for the process by looking at the port number specified in the datagram. If there’s a queue, the datagram gets added to the end of the queue.
+If there’s no queue, the datagram gets dropped and an ICMP Destination Unreachable message is sent back to the sender.
+In case of an overflow of the queue, the datagram get’s dropped and an ICMP Destination Unreachable message is sent back to the sender of the datagram.
+
+Server-side (Receiving):
+========================
+When a message arrives for a server, UDP checks if there’s an incoming queue for the particular port number. If the port number exists, the received datagram is queued at the end of it
+If there’s no queue created, the datagram gets dropped and an ICMP Destination Unreachable message is sent back to the sender of the datagram.
+
+Server-side (Sending):
+========================
+When a server needs to respond to a message or send a new message, the process is similar to that what occurs in the client. The datagram is queued at the end of the outgoing queue.
+
+When the message is to be processed to be sent, a UDP header is attached and is embedded in an IP datagram.
+
+If the outgoing queue overflows, the OS makes the server wait before sending more messages.
+
+The main difference between UDP running on the client-side and the server-side is that, on the client-side, the process makes a request for a port, an incoming queue and an outgoing queue only when the process starts. An ephemeral port (non-standard port) gets assigned to it and the queues get destroyed when the process terminates. Whereas on the server-side, the creation of incoming and outgoing queues on the standard ports occurs when the server starts running and the queues are destroyed only when the server is shutdown, that is, the queues stay alive even if the processes requesting their use get terminated.
+
+Although UDP has many uses, one thing of interest is it’s capability to multicast. UDP has inbuilt multicasting capability whereas TCP lacks it. Cool eh? :
