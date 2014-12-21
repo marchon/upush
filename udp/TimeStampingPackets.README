@@ -1,0 +1,9 @@
+sock_tx_timestamp is only called for SOCK_DGRAM sockets in current kernel code.
+
+BTW, the document Documentation/networking/timestamping/timestamping.c isn't very accurate.
+
+SO_TIMESTAMP / SO_TIMESTAMPNS / SO_TIMESTAMPING / SIOCGSTAMP / SIOCGSTAMPNS are similar. Anyone of them will enable application getting the timestamp of a received packet.
+
+With SOF_TIMESTAMPING_TX_SOFTWARE, any one of the above flags will also provide the application a CMSG in MSG_ERRQUEUE, indicating the timestamp of a sent packet.
+
+But SOF_TIMESTAMPING_RX_SOFTWARE is useless at all. It can not even be used to disable the reporting of timestamp of received packets.

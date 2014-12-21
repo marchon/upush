@@ -1,0 +1,4 @@
+
+This has to do with the maximum size of a datagram on the two machines involved. This depends on the sytems involved, and the MTU (Maximum Transmission Unit). According to "UNIX Network Programming", all TCP/IP implementations must support a minimum IP datagram size of 576 bytes, regardless of the MTU. Assuming a 20 byte IP header, this leaves 556 bytes as a safe maximum size for UDP messages. The maximum size is 65516 bytes. Some platforms support IP fragmentation which will allow datagrams to be broken up (because of MTU values) and then re-assembled on the other end, but not all implementations support this.
+
+
